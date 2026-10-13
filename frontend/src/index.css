@@ -1,0 +1,13 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Varmistetaan vielä, että MapLibren omat elementit täyttävät tilan oikein */
+.maplibregl-map {
+  width: 100%;
+  height: 100%;
+}
