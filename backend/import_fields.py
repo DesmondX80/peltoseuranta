@@ -2,13 +2,19 @@ import os
 import random
 import geopandas as gpd
 
-gpkg_path = "backend/peltolohkot.gpkg"
+# Etsitään gpkg-tiedosto mistä tahansa mahdollisesta sijainnista
+gpkg_paths = ["peltolohkot.gpkg", "backend/peltolohkot.gpkg", "../backend/peltolohkot.gpkg"]
+gpkg_path = None
+for path in gpkg_paths:
+    if os.path.exists(path):
+        gpkg_path = path
+        break
 
-if not os.path.exists(gpkg_path):
-    print(f"Tiedostoa {gpkg_path} ei löytynyt!")
+if not gpkg_path:
+    print(f"Virhe: Peltolohkotiedostoa ei löytynyt mistään! Etsityt polut: {gpkg_paths}")
     exit(1)
 
-print("Luetaan aineistoa tiedostosta...")
+print(f"Luetaan aineisto tiedostosta: {gpkg_path}")
 gdf = gpd.read_file(gpkg_path)
 
 if gdf.crs != "EPSG:4326":
@@ -44,9 +50,12 @@ df_to_db = gpd.GeoDataFrame({
     'geometry': gdf['geometry']
 }, crs="EPSG:4326")
 
+# Määritellään output-polku oikeaan paikkaan juuresta katsottuna
 output_json_path = "frontend/public/fields.json"
+if not os.path.exists("frontend"):
+    output_json_path = "../frontend/public/fields.json"
+
 os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
 print(f"Tallennetaan staattinen GeoJSON kasvilajeilla tiedostoon '{output_json_path}'...")
 df_to_db.to_file(output_json_path, driver="GeoJSON")
-
-print("Valmista! Peltotiedot kasvilajeineen päivitetty.")
+print("Valmista!")
