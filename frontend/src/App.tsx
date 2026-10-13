@@ -31,7 +31,8 @@ export default function App() {
       };
     };
 
-    const jsonUrl = `${import.meta.env.BASE_URL}fields.json`;
+    // Lisätään aikaleima osoitteeseen, jotta selain ei lataa vanhaa versiota välimuistista
+    const jsonUrl = `${import.meta.env.BASE_URL}fields.json?v=${Date.now()}`;
 
     fetch(jsonUrl)
       .then(res => res.json())
