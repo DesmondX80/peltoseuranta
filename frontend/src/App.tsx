@@ -15,11 +15,13 @@ export default function App() {
     }).addTo(map);
 
     const getFeatureStyle = (feature: any) => {
-      const kasvi = feature.properties?.kasvilaji?.toLowerCase() || '';
-      let fillColor = '#228B22';
-      if (kasvi.includes('ohra')) fillColor = '#e6b800';
-      else if (kasvi.includes('vehnä')) fillColor = '#d9822b';
-      else if (kasvi.includes('nurmi') || kasvi.includes('heinä')) fillColor = '#55a630';
+      const kasvi = (feature.properties?.kasvilaji || '').toLowerCase();
+      let fillColor = '#228B22'; // oletus vihreä
+      if (kasvi.includes('ohra')) fillColor = '#e6b800'; // keltainen
+      else if (kasvi.includes('vehnä')) fillColor = '#d9822b'; // oranssi
+      else if (kasvi.includes('nurmi') || kasvi.includes('heinä')) fillColor = '#55a630'; // vaaleanvihreä
+      else if (kasvi.includes('kaura')) fillColor = '#f4a261';
+      else if (kasvi.includes('herne')) fillColor = '#2a9d8f';
 
       return {
         color: '#004d00',
@@ -39,10 +41,14 @@ export default function App() {
           onEachFeature: (feature, layer) => {
             if (feature.properties) {
               const props = feature.properties;
+              const lohkoId = props.lohko_id || props.TUNNUS || 'Tuntematon';
+              const pintaAla = props.pinta_ala ? `${props.pinta_ala} ha` : 'Ei tietoa';
+              const kasvilaji = props.kasvilaji || 'Ei määritelty';
+
               layer.bindPopup(
-                `<strong>Lohko ID:</strong> ${props.lohko_id || props.TUNNUS}<br/>` +
-                `<strong>Pinta-ala:</strong> ${props.pinta_ala ? props.pinta_ala + ' ha' : 'Ei tietoa'}<br/>` +
-                `<strong>Kasvilaji:</strong> ${props.kasvilaji || 'Ei määritelty'}`
+                `<strong>Lohko ID:</strong> ${lohkoId}<br/>` +
+                `<strong>Pinta-ala:</strong> ${pintaAla}<br/>` +
+                `<strong>Kasvilaji:</strong> ${kasvilaji}`
               );
             }
           }
