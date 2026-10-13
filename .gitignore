@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+__pycache__/
+.venv/
+
+# Environment variables
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# Local database / GIS temp files
+*.gpkg
+*.geojson
