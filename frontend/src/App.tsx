@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -32,31 +32,31 @@ export default function App() {
     const jsonUrl = `${import.meta.env.BASE_URL}fields.json`;
 
     fetch(jsonUrl)
-        .then(res => res.json())
-        .then(data => {
-          const geoLayer = L.geoJSON(data, {
-            style: getFeatureStyle,
-            onEachFeature: (feature, layer) => {
-              if (feature.properties) {
-                const props = feature.properties;
-                layer.bindPopup(
-                    `<strong>Lohko ID:</strong> ${props.lohko_id || props.TUNNUS}<br/>` +
-                    `<strong>Pinta-ala:</strong> ${props.pinta_ala ? props.pinta_ala + ' ha' : 'Ei tietoa'}<br/>` +
-                    `<strong>Kasvilaji:</strong> ${props.kasvilaji || 'Ei määritelty'}`
-                );
-              }
+      .then(res => res.json())
+      .then(data => {
+        const geoLayer = L.geoJSON(data, {
+          style: getFeatureStyle,
+          onEachFeature: (feature, layer) => {
+            if (feature.properties) {
+              const props = feature.properties;
+              layer.bindPopup(
+                `<strong>Lohko ID:</strong> ${props.lohko_id || props.TUNNUS}<br/>` +
+                `<strong>Pinta-ala:</strong> ${props.pinta_ala ? props.pinta_ala + ' ha' : 'Ei tietoa'}<br/>` +
+                `<strong>Kasvilaji:</strong> ${props.kasvilaji || 'Ei määritelty'}`
+              );
             }
-          }).addTo(map);
-
-          if (data.features && data.features.length > 0) {
-            map.fitBounds(geoLayer.getBounds(), { padding: [50, 50] });
           }
-        })
-        .catch(err => console.error('Virhe peltolohkojen haussa:', err));
+        }).addTo(map);
+
+        if (data.features && data.features.length > 0) {
+          map.fitBounds(geoLayer.getBounds(), { padding: [50, 50] });
+        }
+      })
+      .catch(err => console.error('Virhe peltolohkojen haussa:', err));
 
   }, []);
 
   return (
-      <div id="map" style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }} />
+    <div id="map" style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }} />
   );
 }
